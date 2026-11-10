@@ -2,6 +2,14 @@ import { useState, useEffect } from 'react';
 import { PromptInput } from './components/PromptInput';
 import { ComponentCard } from './components/ComponentCard';
 import { useComponentGenerator } from './hooks/useComponentGenerator';
+import { usePersistentState } from './hooks/usePersistentState';
+import {
+  DEFAULT_PROVIDER,
+  EMPTY_API_KEYS,
+  STORAGE_KEYS,
+  parseApiKeys,
+  parseProvider,
+} from './utils/persistence';
 import type { Provider } from './types';
 import './App.css';
 
@@ -11,15 +19,23 @@ const PROVIDER_CONFIG = {
 } as const;
 
 function App() {
-  const [apiKey, setApiKey] = useState('');
+  const [apiKeys, setApiKeys] = usePersistentState(STORAGE_KEYS.apiKeys, parseApiKeys, EMPTY_API_KEYS);
   const [showKey, setShowKey] = useState(false);
-  const [provider, setProvider] = useState<Provider>('google');
+  const [provider, setProvider] = usePersistentState<Provider>(
+    STORAGE_KEYS.provider,
+    parseProvider,
+    DEFAULT_PROVIDER,
+  );
   const [envKeys, setEnvKeys] = useState<Record<Provider, boolean>>({
     anthropic: false,
     google: false,
   });
   const { components, isLoading, error, generate, removeComponent, clearAll } =
     useComponentGenerator();
+
+  // 키는 Provider별로 저장하므로 Provider를 바꿔도 각자 입력한 키가 유지된다.
+  const apiKey = apiKeys[provider];
+  const setApiKey = (value: string) => setApiKeys((prev) => ({ ...prev, [provider]: value }));
 
   useEffect(() => {
     fetch('/api/config')
@@ -40,7 +56,6 @@ function App() {
 
   const handleProviderChange = (newProvider: Provider) => {
     setProvider(newProvider);
-    setApiKey('');
   };
 
   const activeProvider = PROVIDER_CONFIG[provider].label;
