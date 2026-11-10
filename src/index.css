@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --desktop: #35618f;
+  --desktop-dot: #2c5380;
+  --ink: #16181d;
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Galmuri11', 'Galmuri9', 'Malgun Gothic', ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  background-color: var(--desktop);
+  background-image:
+    linear-gradient(45deg, var(--desktop-dot) 25%, transparent 25%, transparent 75%, var(--desktop-dot) 75%),
+    linear-gradient(45deg, var(--desktop-dot) 25%, transparent 25%, transparent 75%, var(--desktop-dot) 75%);
+  background-position: 0 0, 2px 2px;
+  background-size: 4px 4px;
+  color: var(--ink);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: #ffd23f;
+  color: var(--ink);
+}
